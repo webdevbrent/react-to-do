@@ -7,6 +7,8 @@ class App extends Component {
     super(props);
     this.state = {
       todos: [],
+      id: 1,
+      isCompleted: false,
       newTodoDescription: ''
     };
     this.deleteTodo = this.deleteTodo.bind(this);
@@ -19,10 +21,9 @@ handleChange(e) {
 handleSubmit(e) {
   e.preventDefault();
   if (!this.state.newTodoDescription) { return }
-  const newTodo = { description: this.state.newTodoDescription, isCompleted: false };
-  this.setState({ todos: [...this.state.todos, newTodo], newTodoDescription: '' });
+  const newTodo = { id: this.state.id, description: this.state.newTodoDescription, isCompleted: this.state.isCompleted };
+  this.setState({ todos: [...this.state.todos, newTodo], newTodoDescription: '', id: this.state.id + 1 });
 }
-
 
 toggleComplete(index) {
   const todos = this.state.todos.slice();
@@ -31,13 +32,10 @@ toggleComplete(index) {
   this.setState({ todos: todos });
 }
 
-
 deleteTodo(id) {
-  const remainingToDos = this.state.todos.filter((todo) => {
-      if(todo.id !== id) return todo; });
+  const remainingToDos = this.state.todos.filter(todo => { return todo.id !== id; });
   this.setState({ todos: remainingToDos });
 }
-
 
   render() {
     return (
@@ -53,13 +51,13 @@ deleteTodo(id) {
         <ul>
           { this.state.todos.map( (todo, id) =>
             <ToDo key={ id }
-              description={ todo.description }
-              isCompleted={ todo.isCompleted }
-              toggleComplete={ () => this.toggleComplete(id) }
-              onDelete={ this.deleteTodo }
-               />
+                  id={ todo.id }
+                  description={ todo.description }
+                  isCompleted={ todo.isCompleted }
+                  toggleComplete={ () => this.toggleComplete(id) }
+                  onDelete={ this.deleteTodo }
+            />
           )}
-
         </ul>
       </div>
     );
